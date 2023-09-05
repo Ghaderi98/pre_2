@@ -25,7 +25,7 @@ def get_stock_data(symbol):
 
 
 def train_lstm(data):
-    # پیاده‌سازی مدل LSTM با لایه‌بندی
+ 
     model = Sequential()
     model.add(LSTM(units=50, return_sequences=True, input_shape=(None, 1)))
     model.add(LSTM(units=50, return_sequences=True))
@@ -33,34 +33,33 @@ def train_lstm(data):
     model.add(Dense(units=1))
     model.compile(optimizer='adam', loss='mean_squared_error')
 
-    # آموزش مدل با داده‌های آموزشی
-    # ...
+
 
     return model
 
 
 def predict_lstm(model, data):
-    # تبدیل داده‌ها به آرایه numpy
+
     data = np.array(data)
 
-    # تغییر شکل داده‌ها برای ورودی LSTM
+  
     data = np.reshape(data, (data.shape[0], data.shape[1], 1))
 
-    # پیش‌بینی با استفاده از مدل LSTM
+   
     predictions = model.predict(data)
 
     return predictions
 
 
 def calculate_profit(data, buy_date, buy_price):
-    # پیدا کردن قیمت سهام در تاریخ خرید
+
     buy_price = data.loc[buy_date, 'Close']
 
-    # پیدا کردن قیمت سهام در تاریخ فروش (به عنوان مثال، تاریخ امروز)
+
     sell_date = datetime.date.today().strftime("%Y-%m-%d")
     sell_price = data.loc[sell_date, 'Close']
 
-    # محاسبه سود
+   
     profit = (sell_price - buy_price) * 100 / buy_price
 
     return profit
@@ -104,30 +103,28 @@ def main():
         st.write("Stock Data:")
         st.write(stock_data)
 
-        # آموزش مدل LSTM
         model = train_lstm(stock_data)
 
-        # پیش‌بینی با استفاده از مدل LSTM
+
         prediction = predict_lstm(model, stock_data)
 
         st.write("Prediction:")
         st.write(prediction)
 
-        # دریافت اطلاعات سهام از ویکی‌پدیا
         stock_info = fetch_stock_info(symbol)
         st.write("Stock Info:")
         st.write(stock_info)
 
-        # پیش‌بینی روند بازار برای 10 روز بعد
+  
         future_dates = pd.date_range(start=stock_data.index[-1], periods=10, closed='right')
         future_data = pd.DataFrame(index=future_dates, columns=stock_data.columns)
 
-        # تکمیل داده‌های آینده با استفاده از مدر ادامه، کد برای تکمیل بخش پیش‌بینی روند بازار برای 10 روز بعد و تکمیل داده‌های آینده با استفاده از مدل LSTM را می‌آورم:
+    
 
 
 
-        # تکمیل داده‌های آینده با استفاده از مدل LSTM
-        last_data = np.array(stock_data['Close'][-100:])  # 100 روز گذشته
+ 
+        last_data = np.array(stock_data['Close'][-100:]) 
         for i in range(len(future_data)):
             next_day_prediction = predict_lstm(model, last_data.reshape(1, -1, 1))
             future_data.iloc[i] = next_day_prediction
